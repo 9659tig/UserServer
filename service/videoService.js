@@ -19,6 +19,39 @@ async function getVideoInfo(channelID) {
     }
 }
 
+async function getVideoListInfo() {
+    const params = {
+        TableName: 'Videos',
+    };
+
+    try{
+        const command = new QueryCommand(params)
+        const result = await docClient.send(command)
+        return result.Items
+    }catch(err){
+        throw err
+    }
+}
+
+async function getVideoInfoByName(videoName) {
+    const params = {
+        TableName: 'Videos',
+        IndexName: "videoName",
+        KeyConditionExpression: "videoName = :videoName",
+        ExpressionAttributeValues: {
+        ":videoName": { S: videoName }
+        }
+    };
+
+    try{
+        const command = new QueryCommand(params)
+        const result = await docClient.send(command)
+        return result.Items
+    }catch(err){
+        throw err
+    }
+}
+
 module.exports = {
-    getVideoInfo,
+    getVideoInfo,getVideoListInfo,getVideoInfoByName,
 };

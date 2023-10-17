@@ -9,6 +9,10 @@ app.use(cookieParser());
 
 require('./routers/router')(app)
 
+app.get('/', function(req,res) {
+    res.send("<h1>hello world!</h1>")
+})
+
 app.listen(port, ()=>{
     console.log('server running on http://localhost:'+port);
 })
