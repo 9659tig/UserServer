@@ -14,8 +14,6 @@ async function getInfluencer(channelID) {
         const command = new QueryCommand(params)
         const result = await docClient.send(command)
         return result.Items[0]
-        if (result.Items.length > 0) return true
-        else return false
     }catch(err){
         throw err
     }

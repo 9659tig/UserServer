@@ -2,11 +2,11 @@ const videoService = require('../service/videoService')
 const resStatus = require('../config/response')
 exports.getVideos = async(req,res)=>{
     try{
-        const channelId = req.query.channelID;
-        if(!channelId)
+        const channelID = req.params.channelId;
+        if(!channelID)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 
-        const videoList = await videoService.getVideoInfo(channelId)
+        const videoList = await videoService.getVideoInfo(channelID)
         return res.send(videoList)
     }catch (err) {
         console.log(err);

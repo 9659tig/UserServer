@@ -2,7 +2,7 @@ const clipService = require('../service/clipService')
 const resStatus = require('../config/response')
 exports.getClips = async(req,res)=>{
     try{
-        const videoID = req.query.videoID;
+        const videoID = req.params.videoId;
         if(!videoID)
             return res.status(400).send(resStatus.VIDEOID_EMPTY);
 

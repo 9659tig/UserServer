@@ -4,18 +4,12 @@ module.exports = function (app) {
     const influencer = require('../controller/influencerController')
 
     //인플루언서 정보 조회
-    app.get('/influencer', influencer.getInfluencer)
-
-    //인플루언서 정보 조회 - 이름으로
-    // app.get('/influencer/:channelName', influencer.getInfluencerByName)
+    app.get('/influencer/:channelId', influencer.getInfluencer)
 
     //비디오 정보 조회
-    app.get('/videos/:videoName', video.getVideos);
-
-    //비디오 정보 조회 - 이름으로
-    app.get('/videos', video.getVideosByName);
+    app.get('/videos/:channelId', video.getVideos);
 
     //클립 목록 조회
-    app.get('/clips', clip.getClips);
+    app.get('/clips/:videoId', clip.getClips);
 
 };
