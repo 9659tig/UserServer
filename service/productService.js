@@ -19,6 +19,26 @@ async function getProductInfo(clipLink) {
     }
 }
 
+async function getProductInfoByInfluencer(channelId) {
+    const params = {
+        TableName: 'Products',
+        IndexName: 'channelId-index',
+        KeyConditionExpression: "channelId = :channelId",
+        ExpressionAttributeValues: {
+            ":channelId": { S: channelId }
+        }
+    };
+
+    try{
+        const command = new QueryCommand(params)
+        const result = await docClient.send(command)
+        return result.Items
+    }catch(err){
+        throw err
+    }
+}
+
 module.exports = {
-    getProductInfo
+    getProductInfo,
+    getProductInfoByInfluencer
 };

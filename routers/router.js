@@ -15,4 +15,8 @@ module.exports = function (app) {
 
     // 클립 내 상품 목록 조회
     app.get('/products', product.getProducts)
+
+    // 인플루언서 스토어 조회
+    app.get('/products/:channelId', product.getProductsByInfluencer)
+
 };
