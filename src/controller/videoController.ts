@@ -1,6 +1,8 @@
-const videoService = require('../service/videoService')
-const resStatus = require('../config/response')
-exports.getVideos = async(req,res)=>{
+import { Request, Response } from 'express';
+import resStatus from '../config/response'
+import * as videoService from '../service/videoService'
+
+export const getVideos = async(req: Request, res: Response)=>{
     try{
         const channelID = req.params.channelId;
         if(!channelID)
@@ -14,7 +16,7 @@ exports.getVideos = async(req,res)=>{
     }
 }
 
-exports.getVideoList = async(req,res)=>{
+export const getVideoList = async(req: Request, res: Response)=>{
     try{
         const videoList = await videoService.getVideoListInfo()
         return res.send(videoList)
@@ -24,9 +26,9 @@ exports.getVideoList = async(req,res)=>{
     }
 }
 
-exports.getVideosByName = async(req,res)=>{
+export const getVideosByName = async(req: Request, res: Response)=>{
     try{
-        const videoName = req.query.videoName;
+        const videoName: string = req.query.videoName as string;
         if(!videoName)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 

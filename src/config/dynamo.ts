@@ -1,6 +1,5 @@
-const {DYNAMO_ACCESS} = require('./secret')
-const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DYNAMO_ACCESS } from "./secret";
 
 const docClient = new DynamoDBClient({
     region: 'ap-northeast-2',
@@ -8,6 +7,6 @@ const docClient = new DynamoDBClient({
         accessKeyId: DYNAMO_ACCESS.KEY,
         secretAccessKey: DYNAMO_ACCESS.SECRET_KEY,
     }
-});
+} as any);
 
-module.exports = docClient;
+export default docClient

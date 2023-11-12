@@ -1,7 +1,7 @@
-const docClient = require('../config/dynamo')
-const {QueryCommand} = require("@aws-sdk/client-dynamodb");
+import docClient from '../config/dynamo';
+import { QueryCommand } from "@aws-sdk/client-dynamodb";
 
-async function getClipInfo(videoID) {
+async function getClipInfo(videoID: string) {
     const params = {
         TableName: 'Clips',
         KeyConditionExpression: "videoId = :videoId",
@@ -19,6 +19,6 @@ async function getClipInfo(videoID) {
     }
 }
 
-module.exports = {
+export {
     getClipInfo
 };

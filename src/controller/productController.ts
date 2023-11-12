@@ -1,9 +1,10 @@
-const productService = require('../service/productService')
-const resStatus = require('../config/response')
+import { Request, Response } from 'express';
+import resStatus from '../config/response'
+import * as productService from '../service/productService'
 
-exports.getProducts = async(req,res)=>{
+export const getProducts = async(req: Request, res: Response)=>{
     try{
-        const clipLink = req.query.clipLink;
+        const clipLink: string = req.query.clipLink as string;
         console.log(clipLink)
         if(!clipLink)
             return res.status(400).send(resStatus.CLIPLINK_EMPTY);
@@ -16,7 +17,7 @@ exports.getProducts = async(req,res)=>{
     }
 }
 
-const createProduct = (productInfo) => {
+const createProduct = (productInfo: any) => {
     return {
         productDeepLink: productInfo.productDeepLink,
         channelId: productInfo.channelId,
@@ -27,13 +28,16 @@ const createProduct = (productInfo) => {
         clipLinks: [productInfo.clipLink]
     };
 }
-exports.getProductsByInfluencer = async(req,res)=>{
+export const getProductsByInfluencer = async(req: Request, res: Response)=>{
     try{
         const channelID = req.params.channelId;
         if(!channelID)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 
         const productList = await productService.getProductInfoByInfluencer(channelID)
+        if (!productList)
+            throw new Error;
+
         const productsLength = productList.length
         const storeList = []
         if (productsLength == 0)

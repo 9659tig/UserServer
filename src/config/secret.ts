@@ -1,4 +1,4 @@
-const dotenv = require('dotenv')
+import dotenv from 'dotenv'
 dotenv.config()
 
 const DYNAMO_ACCESS = {
@@ -6,6 +6,6 @@ const DYNAMO_ACCESS = {
     SECRET_KEY : process.env.DYNAMO_SECRET_KEY
 }
 
-module.exports = {
+export {
     DYNAMO_ACCESS,
 }

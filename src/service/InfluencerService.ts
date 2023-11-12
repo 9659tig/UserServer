@@ -1,7 +1,7 @@
-const docClient = require('../config/dynamo')
-const { QueryCommand } = require("@aws-sdk/client-dynamodb");
+import docClient from '../config/dynamo';
+import { QueryCommand } from "@aws-sdk/client-dynamodb";
 
-async function getInfluencer(channelID) {
+async function getInfluencerInfo(channelID: string) {
     const params = {
         TableName: 'Influencers',
         KeyConditionExpression: "channelId = :channelId",
@@ -13,12 +13,13 @@ async function getInfluencer(channelID) {
     try{
         const command = new QueryCommand(params)
         const result = await docClient.send(command)
-        return result.Items[0]
+        if (result.Items)
+            return result.Items[0]
     }catch(err){
         throw err
     }
 }
 
-module.exports = {
-    getInfluencer,
+export {
+    getInfluencerInfo
 };

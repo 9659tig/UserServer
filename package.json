@@ -2,10 +2,10 @@
   "name": "userapp_server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "nodemon ./app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "start": "nodemon --exec ts-node src/app.ts",
+    "deploy": "npx pm2 start dist/app.js -n linpl"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +16,12 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "nodemon": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.9.0",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
   }
 }

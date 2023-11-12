@@ -1,7 +1,7 @@
-const docClient = require('../config/dynamo')
-const {QueryCommand} = require("@aws-sdk/client-dynamodb");
+import docClient from '../config/dynamo';
+import { QueryCommand } from "@aws-sdk/client-dynamodb";
 
-async function getProductInfo(clipLink) {
+async function getProductInfo(clipLink: string) {
     const params = {
         TableName: 'Products',
         KeyConditionExpression: "clipLink = :clipLink",
@@ -19,10 +19,10 @@ async function getProductInfo(clipLink) {
     }
 }
 
-async function getProductInfoByInfluencer(channelId) {
+async function getProductInfoByInfluencer(channelId: string) {
     const params = {
         TableName: 'Products',
-        IndexName: 'channelId-index',
+        IndexName: 'channelId-productDeepLink-index',
         KeyConditionExpression: "channelId = :channelId",
         ExpressionAttributeValues: {
             ":channelId": { S: channelId }
@@ -38,7 +38,7 @@ async function getProductInfoByInfluencer(channelId) {
     }
 }
 
-module.exports = {
+export {
     getProductInfo,
     getProductInfoByInfluencer
 };

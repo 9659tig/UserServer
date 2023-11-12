@@ -1,4 +1,4 @@
-module.exports = {
+export = {
 
     CHANNELID_EMPTY : { result: false, error: '입력 형식 에러', message: 'channel Id값이 없습니다.' },
     VIDEOID_EMPTY : { result: false, error: '입력 형식 에러', message: 'video Id값이 없습니다.' },
