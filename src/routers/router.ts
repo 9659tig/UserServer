@@ -9,6 +9,10 @@ import * as product from '../controller/productController'
 
 // 인플루언서 정보 조회
 router.get('/influencer/:channelId', influencer.getInfluencer)
+// 인플루언서 검색
+router.get('/influencers', influencer.getInfluencerByName)
+
+
 // 비디오 정보 조회
 router.get('/videos/:channelId', video.getVideos);
 // 비디오 내 클립 목록 조회
@@ -18,5 +22,7 @@ router.get('/clips/:videoId', clip.getClips);
 router.get('/products', product.getProducts)
 // 인플루언서 스토어 조회
 router.get('/products/:channelId', product.getProductsByInfluencer)
+// 상품 검색
+router.get('/products-search/:type', product.getProductsBySearch)
 
 export default router;

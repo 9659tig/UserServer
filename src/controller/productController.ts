@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import resStatus from '../config/response'
 import * as productService from '../service/productService'
+import { getStores, getProductsByAll, getProductsByName, getProductsByBrand } from '../utils/search';
+
 
 export const getProducts = async(req: Request, res: Response)=>{
     try{
@@ -17,46 +19,47 @@ export const getProducts = async(req: Request, res: Response)=>{
     }
 }
 
-const createProduct = (productInfo: any) => {
-    return {
-        productDeepLink: productInfo.productDeepLink,
-        channelId: productInfo.channelId,
-        productImage: productInfo.productImages,
-        productBrand: productInfo.productBrand,
-        productPrice: productInfo.productPrice.N,
-        productName: productInfo.productName,
-        clipLinks: [productInfo.clipLink]
-    };
-}
+
 export const getProductsByInfluencer = async(req: Request, res: Response)=>{
     try{
         const channelID = req.params.channelId;
         if(!channelID)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 
-        const productList = await productService.getProductInfoByInfluencer(channelID)
-        if (!productList)
-            throw new Error;
+        const stores = await getStores(channelID);
 
-        const productsLength = productList.length
-        const storeList = []
-        if (productsLength == 0)
-            return res.send(productList)
+        return res.send(stores)
 
-        let product = createProduct(productList[0]);
-
-        for(let i=1; i<productsLength; i++){
-            if (product.productDeepLink.S == productList[i].productDeepLink.S){
-                product.clipLinks.push(productList[i].clipLink)
-            }else{
-                storeList.push(product)
-                product = createProduct(productList[i]);
-            }
-        }
-        storeList.push(product)
-        return res.send(storeList)
     }catch (err) {
         console.log(err);
         return res.status(404).send(resStatus.PRODUCT_DB_ERR);
     }
 }
+
+export const getProductsBySearch = async(req: Request, res: Response)=>{
+    try{
+        const type = req.params.type;
+        const keyword: string = req.query.keyword as string;
+
+        if(!type)
+            return res.status(400).send(resStatus.TYPE_EMPTY);
+        if(!keyword)
+            return res.status(400).send(resStatus.KEYWORD_EMPTY);
+
+        let products;
+        if(type == 'all'){
+            products = await getProductsByAll(keyword);
+        }else if(type == 'brand'){
+            products = await getProductsByBrand(keyword);
+        }else if(type == 'name'){
+            products = await getProductsByName(keyword);
+        }
+
+        return res.send(products)
+
+    }catch (err) {
+        console.log(err);
+        return res.status(404).send(resStatus.PRODUCT_DB_ERR);
+    }
+}
+
