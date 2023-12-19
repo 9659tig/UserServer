@@ -10,8 +10,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(router)
 
-//require('./routers/router')(app)
-
 app.listen(port, ()=>{
     console.log('server running on http://localhost:'+port);
 })

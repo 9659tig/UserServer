@@ -6,6 +6,12 @@ const DYNAMO_ACCESS = {
     SECRET_KEY : process.env.DYNAMO_SECRET_KEY
 }
 
+const OS_ACCESS = {
+    USER : process.env.OS_USER as string,
+    PASSWORD : process.env.OS_PASSWORD as string
+}
+
 export {
     DYNAMO_ACCESS,
+    OS_ACCESS
 }
