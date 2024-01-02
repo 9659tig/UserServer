@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { OS_ACCESS } from '../config/secret';
+import { searchData } from './searchData';
 
 const createProduct = (productInfo: any) => {
     return {
@@ -16,40 +17,21 @@ const createProduct = (productInfo: any) => {
 }
 
 async function getStores(channelID: string) {
-    const stores = await axios.get('https://search-linpl-v6bmftpwgytkxfbypg3q7sxgr4.ap-northeast-2.es.amazonaws.com/products/_search', {
-        params: {
-            source: JSON.stringify({
-                query: {
-                    match: {
-                        channelId: channelID
-                    }
-                }
-            }),
-            source_content_type: 'application/json'
-        },
-        auth: {
-            username: OS_ACCESS.USER,
-            password: OS_ACCESS.PASSWORD
-        }
-    });
+    const stores = await searchData('products', 'channelId', channelID);
 
-    const productList = stores.data.hits.hits.map((hit: { _source: any; }) => hit._source);
-    if (!productList)
-        throw new Error;
-
-    const productsLength = productList.length
+    const productsLength = stores.length
     const storeList = []
     if (productsLength == 0)
-        return productList
+        return stores
 
-    let product = createProduct(productList[0]);
+    let product = createProduct(stores[0]);
 
     for(let i=1; i<productsLength; i++){
-        if (product.productDeepLink == productList[i].productDeepLink){
-            product.clipLinks.push(productList[i].clipLink)
+        if (product.productDeepLink == stores[i].productDeepLink){
+            product.clipLinks.push(stores[i].clipLink)
         }else{
             storeList.push(product)
-            product = createProduct(productList[i]);
+            product = createProduct(stores[i]);
         }
     }
     storeList.push(product)
@@ -57,28 +39,13 @@ async function getStores(channelID: string) {
     return storeList;
 }
 
-async function getInfluencers(channelName: string) {
-    const response = await axios.get('https://search-linpl-v6bmftpwgytkxfbypg3q7sxgr4.ap-northeast-2.es.amazonaws.com/influencers/_search', {
-        params: {
-            source: JSON.stringify({
-                query: {
-                    match: {
-                        channelName: channelName
-                    }
-                }
-            }),
-            source_content_type: 'application/json'
-        },
-        auth: {
-            username: OS_ACCESS.USER,
-            password: OS_ACCESS.PASSWORD
-        }
-    });
+async function getInfluencersByChanneid(channelName: string) {
+    const influencers = await searchData('influencers', 'channelId', channelName);
+    return influencers;
+}
 
-    const influencers = response.data.hits.hits.map((hit: { _source: any; }) => hit._source);
-        if (!influencers)
-            throw new Error;
-
+async function getInfluencersByChannelname(channelName: string) {
+    const influencers = await searchData('influencers', 'channelName', channelName);
     return influencers;
 }
 
@@ -109,61 +76,32 @@ async function getProductsByAll(keyword: string) {
 }
 
 async function getProductsByBrand(keyword: string) {
-    const products = await axios.get('https://search-linpl-v6bmftpwgytkxfbypg3q7sxgr4.ap-northeast-2.es.amazonaws.com/products/_search', {
-        params: {
-            source: JSON.stringify({
-                query: {
-                    match: {
-                        productBrand: keyword
-                    }
-                }
-            }),
-            source_content_type: 'application/json'
-        },
-        auth: {
-            username: OS_ACCESS.USER,
-            password: OS_ACCESS.PASSWORD
-        }
-    });
-
-    const productList = products.data.hits.hits.map((hit: { _source: any; }) => hit._source);
-    if (!productList)
-        throw new Error;
-
+    const productList = await searchData('products', 'productBrand', keyword);
     return productList;
 }
 
 async function getProductsByName(keyword: string) {
-    const products = await axios.get('https://search-linpl-v6bmftpwgytkxfbypg3q7sxgr4.ap-northeast-2.es.amazonaws.com/products/_search', {
-        params: {
-            source: JSON.stringify({
-                query: {
-                    match: {
-                        productName: keyword
-                    }
-                }
-            }),
-            source_content_type: 'application/json'
-        },
-        auth: {
-            username: OS_ACCESS.USER,
-            password: OS_ACCESS.PASSWORD
-        }
-    });
-
-    const productList = products.data.hits.hits.map((hit: { _source: any; }) => hit._source);
-    if (!productList)
-        throw new Error;
-
+    const productList = await searchData('products', 'productName', keyword);
     return productList;
 }
 
+async function getProdutsByMeta(keyword: string) {
+    const productList = await searchData('products', 'metaInfo', keyword);
+    return productList;
+}
 
+async function getProdutsByCliplink(keyword: string) {
+    const productList = await searchData('products', 'clipLink', keyword);
+    return productList;
+}
 
 export {
     getStores,
-    getInfluencers,
+    getInfluencersByChannelname,
+    getInfluencersByChanneid,
     getProductsByAll,
     getProductsByBrand,
-    getProductsByName
+    getProductsByName,
+    getProdutsByMeta,
+    getProdutsByCliplink
 };

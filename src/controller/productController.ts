@@ -1,17 +1,14 @@
 import { Request, Response } from 'express';
 import resStatus from '../config/response'
-import * as productService from '../service/productService'
-import { getStores, getProductsByAll, getProductsByName, getProductsByBrand } from '../utils/search';
-
+import * as searchEngine from '../utils/search';
 
 export const getProducts = async(req: Request, res: Response)=>{
     try{
         const clipLink: string = req.query.clipLink as string;
-        console.log(clipLink)
         if(!clipLink)
             return res.status(400).send(resStatus.CLIPLINK_EMPTY);
 
-        const clipList = await productService.getProductInfo(clipLink)
+        const clipList = await searchEngine.getProdutsByCliplink(clipLink)
         return res.send(clipList)
     }catch (err) {
         console.log(err);
@@ -26,7 +23,7 @@ export const getProductsByInfluencer = async(req: Request, res: Response)=>{
         if(!channelID)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 
-        const stores = await getStores(channelID);
+        const stores = await searchEngine.getStores(channelID);
 
         return res.send(stores)
 
@@ -48,11 +45,13 @@ export const getProductsBySearch = async(req: Request, res: Response)=>{
 
         let products;
         if(type == 'all'){
-            products = await getProductsByAll(keyword);
+            products = await searchEngine.getProductsByAll(keyword);
         }else if(type == 'brand'){
-            products = await getProductsByBrand(keyword);
+            products = await searchEngine.getProductsByBrand(keyword);
         }else if(type == 'name'){
-            products = await getProductsByName(keyword);
+            products = await searchEngine.getProductsByName(keyword);
+        }else if(type == 'meta'){
+            products = await searchEngine.getProdutsByMeta(keyword);
         }
 
         return res.send(products)
