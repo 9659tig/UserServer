@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { OS_ACCESS } from '../config/secret';
 
-
 async function searchData(category: string, matchKey: string, matchVal: string){
     const response = await axios.get(`https://search-linpl-v6bmftpwgytkxfbypg3q7sxgr4.ap-northeast-2.es.amazonaws.com/${category}/_search`, {
         params: {
@@ -27,4 +26,6 @@ async function searchData(category: string, matchKey: string, matchVal: string){
     return dataList;
 }
 
-export {searchData};
+export {
+    searchData
+};

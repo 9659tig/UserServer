@@ -1,52 +1,24 @@
 import docClient from '../config/dynamo';
 import { QueryCommand } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
 async function getVideoInfo(channelID: string) {
     const params = {
         TableName: 'Videos',
         KeyConditionExpression: "channelId = :channelId",
-        ExpressionAttributeValues: {
-        ":channelId": { S: channelID }
+        ExpressionAttributeValues: marshall({
+        ":channelId": channelID
+        })
+    };
+
+    try{
+        const command = new QueryCommand(params)
+        const result = await docClient.send(command)
+        if (result.Items){
+            return result.Items.map(item => unmarshall(item))
+        } else {
+            return []
         }
-    };
-
-    try{
-        const command = new QueryCommand(params)
-        const result = await docClient.send(command)
-        return result.Items
-    }catch(err){
-        throw err
-    }
-}
-
-async function getVideoListInfo() {
-    const params = {
-        TableName: 'Videos',
-    };
-
-    try{
-        const command = new QueryCommand(params)
-        const result = await docClient.send(command)
-        return result.Items
-    }catch(err){
-        throw err
-    }
-}
-
-async function getVideoInfoByName(videoName: string) {
-    const params = {
-        TableName: 'Videos',
-        IndexName: "videoName",
-        KeyConditionExpression: "videoName = :videoName",
-        ExpressionAttributeValues: {
-        ":videoName": { S: videoName }
-        }
-    };
-
-    try{
-        const command = new QueryCommand(params)
-        const result = await docClient.send(command)
-        return result.Items
     }catch(err){
         throw err
     }
@@ -54,6 +26,4 @@ async function getVideoInfoByName(videoName: string) {
 
 export {
     getVideoInfo,
-    getVideoListInfo,
-    getVideoInfoByName,
 };

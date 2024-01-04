@@ -38,17 +38,13 @@ export const getInfluencerByName = async(req: Request, res: Response)=>{
         const searchRes = []
         for (const influencer of influencers) {
             const originStores = await getStores(influencer.channelId);
+
             const stores = originStores.map((store: any) => {
-                return {
-                    productDeepLink: store.productDeepLink,
-                    productImage: store.productImage,
-                    productBrand: store.productBrand,
-                    productPrice: store.productPrice,
-                    productName: store.productName,
-                    purchaseCnt: store.purchaseCnt,
-                    views: store.views
-                }
+                delete store.clipLinks
+                delete store.channelId
+                return store
             });
+
             const videoList = await videoService.getVideoInfo(influencer.channelId)
 
             const searchInfo = createSearchInfo(influencer.channelName, influencer.channelProfile, influencer.subscriberCount, stores, videoList)

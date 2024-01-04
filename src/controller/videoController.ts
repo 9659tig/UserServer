@@ -15,27 +15,3 @@ export const getVideos = async(req: Request, res: Response)=>{
         return res.status(404).send(resStatus.VIDEO_DB_ERR);
     }
 }
-
-export const getVideoList = async(req: Request, res: Response)=>{
-    try{
-        const videoList = await videoService.getVideoListInfo()
-        return res.send(videoList)
-    }catch (err) {
-        console.log(err);
-        return res.status(404).send(resStatus.VIDEO_DB_ERR);
-    }
-}
-
-export const getVideosByName = async(req: Request, res: Response)=>{
-    try{
-        const videoName: string = req.query.videoName as string;
-        if(!videoName)
-            return res.status(400).send(resStatus.CHANNELID_EMPTY);
-
-        const videoList = await videoService.getVideoInfoByName(videoName)
-        return res.send(videoList)
-    }catch (err) {
-        console.log(err);
-        return res.status(404).send(resStatus.VIDEO_DB_ERR);
-    }
-}

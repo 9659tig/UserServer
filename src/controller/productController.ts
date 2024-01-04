@@ -16,7 +16,6 @@ export const getProducts = async(req: Request, res: Response)=>{
     }
 }
 
-
 export const getProductsByInfluencer = async(req: Request, res: Response)=>{
     try{
         const channelID = req.params.channelId;
