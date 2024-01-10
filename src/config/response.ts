@@ -6,6 +6,7 @@ export = {
     CHANNELNAME_EMPTY : { result: false, error: '입력 형식 에러', message: 'channel Name값이 없습니다.' },
     TYPE_EMPTY : { result: false, error: '입력 형식 에러', message: 'type값이 없습니다.' },
     KEYWORD_EMPTY : { result: false, error: '입력 형식 에러', message: 'keyword값이 없습니다.' },
+    PRODUCTDEEPLINK_EMPTY : { result: false, error: '입력 형식 에러', message: 'productDeepLink값이 없습니다.' },
 
     VIDEO_DB_ERR : {result: false, error: "DB 에러", message:"비디오 목록 정보를 가져오지 못했습니다."},
     CLIP_DB_ERR : {result: false, error: "DB 에러", message:"클립 목록 정보를 가져오지 못했습니다."},

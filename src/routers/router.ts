@@ -19,7 +19,9 @@ router.get('/clips/:videoId', clip.getClips);
 // 클립 내 상품 목록 조회
 router.get('/products', product.getProducts)
 // 인플루언서 스토어 조회
-router.get('/products/:channelId', product.getProductsByInfluencer)
+router.get('/products/:channelId', product.getStores)
+// 스토어 내 상품 조회
+router.get('/products/detail/:channelId', product.getProductInfo)
 // 상품 검색
 router.get('/products-search/:type', product.getProductsBySearch)
 
