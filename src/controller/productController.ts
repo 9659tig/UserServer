@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import resStatus from '../config/response'
 import * as searchEngine from '../utils/search';
+import * as productService from '../service/productService'
 
 export const getProducts = async(req: Request, res: Response)=>{
     try{
@@ -8,7 +9,7 @@ export const getProducts = async(req: Request, res: Response)=>{
         if(!clipLink)
             return res.status(400).send(resStatus.CLIPLINK_EMPTY);
 
-        const clipList = await searchEngine.getProdutsByCliplink(clipLink)
+        const clipList = await productService.getProductInfo(clipLink)
         return res.send(clipList)
     }catch (err) {
         console.log(err);

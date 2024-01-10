@@ -90,11 +90,6 @@ async function getProdutsByMeta(keyword: string) {
     return productList;
 }
 
-async function getProdutsByCliplink(keyword: string) {
-    const productList = await searchData('products', 'clipLink', keyword);
-    return productList;
-}
-
 export {
     getStores,
     getInfluencersByChannelname,
@@ -103,5 +98,4 @@ export {
     getProductsByBrand,
     getProductsByName,
     getProdutsByMeta,
-    getProdutsByCliplink
 };

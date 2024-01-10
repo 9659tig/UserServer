@@ -27,5 +27,5 @@ async function searchData(category: string, matchKey: string, matchVal: string){
 }
 
 export {
-    searchData
+    searchData,
 };
