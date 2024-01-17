@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import resStatus from '../config/response'
-import { getStores, getInfluencersByChannelname, getInfluencersByChanneid } from '../utils/search';
+import { getStores, getInfluencersByChannelname } from '../utils/search';
 import * as videoService from '../service/videoService'
+import { getInfluencerInfo } from '../service/influencerService'
 
 export const getInfluencer = async(req: Request, res: Response)=>{
     try{
@@ -9,7 +10,7 @@ export const getInfluencer = async(req: Request, res: Response)=>{
         if(!channelID)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 
-        const influencerInfo = await getInfluencersByChanneid(channelID)
+        const influencerInfo = await getInfluencerInfo(channelID)
         if (!influencerInfo) return res.status(400).send(resStatus.INFLUENCER_EMPTY)
         return res.send(influencerInfo)
     }catch (err) {

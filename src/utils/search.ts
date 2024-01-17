@@ -39,11 +39,6 @@ async function getStores(channelID: string) {
     return storeList;
 }
 
-async function getInfluencersByChanneid(channelName: string) {
-    const influencers = await searchData('influencers', 'channelId', channelName);
-    return influencers;
-}
-
 async function getInfluencersByChannelname(channelName: string) {
     const influencers = await searchData('influencers', 'channelName', channelName);
     return influencers;
@@ -93,7 +88,6 @@ async function getProdutsByMeta(keyword: string) {
 export {
     getStores,
     getInfluencersByChannelname,
-    getInfluencersByChanneid,
     getProductsByAll,
     getProductsByBrand,
     getProductsByName,
