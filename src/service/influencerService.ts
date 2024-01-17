@@ -15,7 +15,7 @@ async function getInfluencerInfo(channelID: string) {
         const command = new QueryCommand(params)
         const result = await docClient.send(command)
         if (result.Items){
-            return result.Items.map(item => unmarshall(item))
+            return unmarshall(result.Items[0]);
         } else {
             return []
         }
