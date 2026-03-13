@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import resStatus from '../config/response'
-import * as searchEngine from '../utils/search';
 import * as productService from '../service/productService'
+import { hybridEngine, store, eventLogger } from '../search/searchContext';
 
 export const getProducts = async(req: Request, res: Response)=>{
     try{
@@ -30,7 +30,6 @@ export const getStores = async(req: Request, res: Response)=>{
         if(!channelID)
             return res.status(400).send(resStatus.CHANNELID_EMPTY);
 
-        //const stores = await searchEngine.getStores(channelID);
         const stores = await productService.getProductsByInfluencer(channelID);
         const storeList:Store[] = []
         stores.forEach(product => {
@@ -89,27 +88,21 @@ export const getProductInfo = async(req: Request, res: Response)=>{
 
 export const getProductsBySearch = async(req: Request, res: Response)=>{
     try{
-        const type: string = req.params.type;
         const keyword: string = req.query.keyword as string;
-
-        if(!type)
-            return res.status(400).send(resStatus.TYPE_EMPTY);
         if(!keyword)
             return res.status(400).send(resStatus.KEYWORD_EMPTY);
 
-        let products;
-        if(type == 'all'){
-            products = await searchEngine.getProductsByAll(keyword);
-        }else if(type == 'brand'){
-            products = await searchEngine.getProductsByBrand(keyword);
-        }else if(type == 'name'){
-            products = await searchEngine.getProductsByName(keyword);
-        }else if(type == 'meta'){
-            products = await searchEngine.getProdutsByMeta(keyword);
-        }
+        const startTime = Date.now();
+        const results = await hybridEngine.searchProducts(keyword);
+        const products = results.map(r => store.getProduct(r.item.id)).filter(Boolean);
 
-        return res.send(products)
+        eventLogger.emit({
+            type: 'search', query: keyword,
+            resultCount: products.length, latencyMs: Date.now() - startTime,
+            timestamp: Date.now(),
+        });
 
+        return res.send(products);
     }catch (err) {
         console.log(err);
         return res.status(404).send(resStatus.PRODUCT_DB_ERR);

@@ -6,11 +6,6 @@ const DYNAMO_ACCESS = {
     SECRET_KEY : process.env.DYNAMO_SECRET_KEY
 }
 
-const OS_ACCESS = {
-    USER : process.env.OS_USER as string,
-    PASSWORD : process.env.OS_PASSWORD as string
-}
-
 const SEARCH_CONFIG = {
     EMBEDDING_PROVIDER: process.env.EMBEDDING_PROVIDER || 'gemini',
     SEARCH_ALPHA: parseFloat(process.env.SEARCH_ALPHA || '0.4'),
@@ -23,6 +18,5 @@ const SEARCH_CONFIG = {
 
 export {
     DYNAMO_ACCESS,
-    OS_ACCESS,
     SEARCH_CONFIG
 }
