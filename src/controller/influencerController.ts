@@ -20,7 +20,7 @@ export const getInfluencer = async(req: Request, res: Response)=>{
     }
 }
 
-const createSearchInfo = (name: string, profile: string, subscriber: number, store: [], videoList: any) => {
+const createSearchInfo = (name: string, profile: string, subscriber: number, store: any[], videoList: any) => {
     return {
         channelName: name,
         channelProfile: profile,
