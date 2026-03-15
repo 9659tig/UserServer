@@ -23,6 +23,6 @@ router.get('/products/:channelId', product.getStores)
 // 스토어 내 상품 조회
 router.get('/products/detail/:channelId', product.getProductInfo)
 // 상품 검색
-router.get('/products-search/:type', product.getProductsBySearch)
+router.get('/products-search/:type?', product.getProductsBySearch)
 
 export default router;

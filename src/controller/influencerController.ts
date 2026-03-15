@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import resStatus from '../config/response'
-import { getStores, getInfluencersByChannelname } from '../utils/search';
 import * as videoService from '../service/videoService'
 import { getInfluencerInfo } from '../service/influencerService'
+import { hybridEngine, store } from '../search/searchContext';
+import * as productService from '../service/productService';
 
 export const getInfluencer = async(req: Request, res: Response)=>{
     try{
@@ -19,7 +20,7 @@ export const getInfluencer = async(req: Request, res: Response)=>{
     }
 }
 
-const createSearchInfo = (name: string, profile: string, subscriber: number, store: [], videoList: any) => {
+const createSearchInfo = (name: string, profile: string, subscriber: number, store: any[], videoList: any) => {
     return {
         channelName: name,
         channelProfile: profile,
@@ -34,24 +35,21 @@ export const getInfluencerByName = async(req: Request, res: Response)=>{
         if(!channelName)
             return res.status(400).send(resStatus.CHANNELNAME_EMPTY);
 
-        const influencers = await getInfluencersByChannelname(channelName);
+        const searchResults = await hybridEngine.searchInfluencers(channelName);
+        const influencers = searchResults.map(r => store.getInfluencer(r.item.id)).filter(Boolean) as any[];
 
         const searchRes = []
         for (const influencer of influencers) {
-            const originStores = await getStores(influencer.channelId);
-
-            const stores = originStores.map((store: any) => {
-                delete store.clipLinks
-                delete store.channelId
-                return store
+            const stores = await productService.getProductsByInfluencer(influencer.channelId);
+            const storeList = stores.map((s: any) => {
+                const { clipLink, channelId, videoId, views, purchases, ...rest } = s;
+                return rest;
             });
 
             const videoList = await videoService.getVideoInfo(influencer.channelId)
-
-            const searchInfo = createSearchInfo(influencer.channelName, influencer.channelProfile, influencer.subscriberCount, stores, videoList)
+            const searchInfo = createSearchInfo(influencer.channelName, influencer.channelProfile, influencer.subscriberCount, storeList, videoList)
             searchRes.push(searchInfo)
         }
-
         return res.send(searchRes)
     }catch (err) {
         console.log(err);
