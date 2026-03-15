@@ -3,9 +3,9 @@ import { EmbeddingProvider } from './EmbeddingProvider';
 
 export class GeminiProvider implements EmbeddingProvider {
   readonly name = 'gemini';
-  readonly dimensions = 768;
+  readonly dimensions = 3072;
   private client: GoogleGenerativeAI;
-  private model: string = 'text-embedding-004';
+  private model: string = 'gemini-embedding-001';
 
   constructor(apiKey: string) {
     this.client = new GoogleGenerativeAI(apiKey);
