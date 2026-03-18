@@ -51,4 +51,27 @@ describe('KeywordSearchEngine', () => {
     // '나이키'의 초성 'ㄴㅇㅋ'로 검색 가능해야 함
     expect(results.length).toBeGreaterThan(0);
   });
+
+  describe('suggestProducts', () => {
+    it('should return suggestion strings for a prefix', async () => {
+      const suggestions = await engine.suggestProducts('나이');
+      expect(suggestions.length).toBeGreaterThan(0);
+      expect(suggestions.every(s => typeof s === 'string')).toBe(true);
+    });
+
+    it('should respect limit parameter', async () => {
+      const suggestions = await engine.suggestProducts('나이', 1);
+      expect(suggestions.length).toBeLessThanOrEqual(1);
+    });
+
+    it('should return empty array for no match', async () => {
+      const suggestions = await engine.suggestProducts('존재하지않는');
+      expect(suggestions).toHaveLength(0);
+    });
+
+    it('should support chosung prefix', async () => {
+      const suggestions = await engine.suggestProducts('ㄴㅇ');
+      expect(suggestions.length).toBeGreaterThan(0);
+    });
+  });
 });

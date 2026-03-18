@@ -83,13 +83,31 @@ export class KeywordSearchEngine {
   async searchProducts(query: string, limit: number = 20): Promise<KeywordResult[]> {
     const tokenized = await this.tokenizeQuery(query);
     const results = this.productIndex.search(tokenized);
-    return results.slice(0, limit).map(r => ({ id: r.id as string, score: r.score }));
+    return results.slice(0, limit).map((r: { id: string | number; score: number }) => ({ id: r.id as string, score: r.score }));
   }
 
   async searchInfluencers(query: string, limit: number = 20): Promise<KeywordResult[]> {
     const tokenized = await this.tokenizeQuery(query);
     const results = this.influencerIndex.search(tokenized);
-    return results.slice(0, limit).map(r => ({ id: r.id as string, score: r.score }));
+    return results.slice(0, limit).map((r: { id: string | number; score: number }) => ({ id: r.id as string, score: r.score }));
+  }
+
+  async suggestProducts(query: string, limit: number = 7): Promise<string[]> {
+    const tokenized = await this.tokenizeQuery(query);
+    const suggestions = this.productIndex.autoSuggest(tokenized, {
+      prefix: true,
+      fuzzy: 0.1,
+    });
+    return suggestions.slice(0, limit).map((s: { suggestion: string }) => s.suggestion);
+  }
+
+  async suggestInfluencers(query: string, limit: number = 7): Promise<string[]> {
+    const tokenized = await this.tokenizeQuery(query);
+    const suggestions = this.influencerIndex.autoSuggest(tokenized, {
+      prefix: true,
+      fuzzy: 0.1,
+    });
+    return suggestions.slice(0, limit).map((s: { suggestion: string }) => s.suggestion);
   }
 
   private async tokenizeQuery(query: string): Promise<string> {
