@@ -5,6 +5,7 @@ import * as video from '../controller/videoController'
 import * as influencer from '../controller/influencerController'
 import * as clip from '../controller/clipController'
 import * as product from '../controller/productController'
+import * as autocomplete from '../controller/autocompleteController'
 
 // 인플루언서 정보 조회
 router.get('/influencer/:channelId', influencer.getInfluencer)
@@ -22,6 +23,8 @@ router.get('/products', product.getProducts)
 router.get('/products/:channelId', product.getStores)
 // 스토어 내 상품 조회
 router.get('/products/detail/:channelId', product.getProductInfo)
+// 자동완성
+router.get('/autocomplete', autocomplete.getAutocomplete)
 // 상품 검색
 router.get('/products-search/:type?', product.getProductsBySearch)
 
