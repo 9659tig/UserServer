@@ -94,8 +94,8 @@ export class HybridSearchEngine {
     if (options.alpha !== undefined && options.beta !== undefined) {
       return { alpha: options.alpha, beta: options.beta };
     }
-    if (query.length <= 2) return { alpha: 0.8, beta: 0.2 };
-    if (await this.tokenizer.isNaturalLanguage(query)) return { alpha: 0.2, beta: 0.8 };
+    if (query.length <= 2) return { alpha: 0.95, beta: 0.05 };
+    if (await this.tokenizer.isNaturalLanguage(query)) return { alpha: 0.3, beta: 0.7 };
     return { alpha: this.defaultAlpha, beta: this.defaultBeta };
   }
 }

@@ -2,3 +2,10 @@
 /node_modules
 dist/
 .worktrees/
+
+docs/
+
+.DS_store
+CLAUDE.md
+
+tests/accuracy/*

@@ -69,9 +69,16 @@ describe('KeywordSearchEngine', () => {
       expect(suggestions).toHaveLength(0);
     });
 
-    it('should support chosung prefix', async () => {
+    it('should strip chosung tokens from suggestions', async () => {
       const suggestions = await engine.suggestProducts('ㄴㅇ');
-      expect(suggestions.length).toBeGreaterThan(0);
+      const CHOSUNG = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+      // 각 suggestion 내에 초성으로만 구성된 토큰이 없어야 함
+      suggestions.forEach(s => {
+        s.split(/\s+/).forEach(token => {
+          const isAllChosung = [...token].every(ch => CHOSUNG.includes(ch));
+          expect(isAllChosung).toBe(false);
+        });
+      });
     });
   });
 });

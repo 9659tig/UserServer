@@ -1,5 +1,6 @@
 import MiniSearch from 'minisearch';
 import { KoreanTokenizer } from '../tokenizer/KoreanTokenizer';
+import { expandWithSynonyms } from '../synonym/KoEnSynonymDict';
 
 interface IndexableProduct {
   id: string;
@@ -39,14 +40,14 @@ export class KeywordSearchEngine {
       fields: ['_tokens', '_chosung'],
       storeFields: ['id'],
       tokenize: simpleTokenize,
-      searchOptions: { tokenize: simpleTokenize, prefix: true, fuzzy: 0.2 },
+      searchOptions: { tokenize: simpleTokenize, prefix: true, fuzzy: 0.35 },
     });
 
     this.influencerIndex = new MiniSearch({
       fields: ['_tokens', '_chosung'],
       storeFields: ['id'],
       tokenize: simpleTokenize,
-      searchOptions: { tokenize: simpleTokenize, prefix: true, fuzzy: 0.2 },
+      searchOptions: { tokenize: simpleTokenize, prefix: true, fuzzy: 0.35 },
     });
   }
 
@@ -98,7 +99,10 @@ export class KeywordSearchEngine {
       prefix: true,
       fuzzy: 0.1,
     });
-    return suggestions.slice(0, limit).map((s: { suggestion: string }) => s.suggestion);
+    return suggestions
+      .map((s: { suggestion: string }) => this.stripChosungTokens(s.suggestion))
+      .filter(Boolean)
+      .slice(0, limit);
   }
 
   async suggestInfluencers(query: string, limit: number = 7): Promise<string[]> {
@@ -107,25 +111,42 @@ export class KeywordSearchEngine {
       prefix: true,
       fuzzy: 0.1,
     });
-    return suggestions.slice(0, limit).map((s: { suggestion: string }) => s.suggestion);
+    return suggestions
+      .map((s: { suggestion: string }) => this.stripChosungTokens(s.suggestion))
+      .filter(Boolean)
+      .slice(0, limit);
+  }
+
+  /** 초성으로만 구성된 개별 토큰을 제거하고 나머지를 조인하여 반환 */
+  private stripChosungTokens(text: string): string {
+    const CHOSUNG = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+    return text
+      .split(/\s+/)
+      .filter(token => ![...token].every(ch => CHOSUNG.includes(ch)))
+      .join(' ');
   }
 
   private async tokenizeQuery(query: string): Promise<string> {
     const tokens = await this.tokenizer.tokenize(query);
+    const expanded = expandWithSynonyms(tokens);
     const chosung = this.tokenizer.extractChosung(query);
-    return [...tokens, chosung].join(' ');
+    return [...expanded, chosung].join(' ');
   }
 
   private async prepareProductDoc(p: IndexableProduct) {
     const text = `${p.productName} ${p.productBrand} ${p.metaInfo}`;
     const tokens = await this.tokenizer.tokenize(text);
+    const expanded = expandWithSynonyms(tokens);
+    const noSpace = p.productName.replace(/\s+/g, '');
     const chosung = this.tokenizer.extractChosung(text);
-    return { id: p.id, _tokens: tokens.join(' '), _chosung: chosung };
+    return { id: p.id, _tokens: [...expanded, noSpace].join(' '), _chosung: chosung };
   }
 
   private async prepareInfluencerDoc(i: IndexableInfluencer) {
     const tokens = await this.tokenizer.tokenize(i.channelName);
+    const expanded = expandWithSynonyms(tokens);
+    const noSpace = i.channelName.replace(/\s+/g, '');
     const chosung = this.tokenizer.extractChosung(i.channelName);
-    return { id: i.id, _tokens: tokens.join(' '), _chosung: chosung };
+    return { id: i.id, _tokens: [...expanded, noSpace].join(' '), _chosung: chosung };
   }
 }
