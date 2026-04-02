@@ -144,8 +144,7 @@ SemanticSearchEngine
 | 자연어 문장 (동사 포함) | `보습력 좋은 크림 추천해줘` | 0.3 | 0.7 |
 | 기본값 | `나이키 운동화` | 0.7 | 0.3 |
 
-<img width="50%" alt="Image" src="https://github.com/user-attachments/assets/145c2715-ae05-4ddf-912b-2e0985f14b40" />
-
+<img width="49%" alt="Image" src="https://github.com/user-attachments/assets/f249fbe7-63f3-46c5-ba6c-5f16a8ea2287" /> <img width="50%" alt="Image" src="https://github.com/user-attachments/assets/beeb400b-cc92-4fbc-9808-57e403ac898f" />
 
 #### 자동완성 vs 확정 검색 분리
 
@@ -169,14 +168,6 @@ POST /internal/sync → SyncHandler.enqueue() → 순차 처리 보장
 <br>
 
 ## **사용자 서버 API**
-
-<br>
-
-![image](https://github.com/user-attachments/assets/fbbcb18a-dabc-4eb7-9e8c-2427a651fec7)
-
-![image](https://github.com/user-attachments/assets/9145cacf-c7a5-4433-b829-3da033060529)
-
-<br>
 
 ### 엔드포인트 목록
 
